@@ -29580,8 +29580,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // Props, propiedaes de un componente. Se pasan como un objeto
 // El flujo de información en React es Vertical de padre a hijo, nunca podremos modificar el componente padre, por ello le pasamos unas propiedades que únicamente alteran a la instancia de nuestro componente
-var Pet = function Pet(props) {
-  return _react.default.createElement("div", {}, [_react.default.createElement("h1", {}, props.nombre), _react.default.createElement("h2", {}, props.animal), _react.default.createElement("h2", {}, props.raza)]);
+// const Pet = (props) => {
+//     return React.createElement("div", {}, [
+//         React.createElement("h1", {}, props.nombre),
+//         React.createElement("h2", {}, props.animal),
+//         React.createElement("h2", {}, props.raza),
+//     ]);
+// };
+const Pet = props => {
+  return _react.default.createElement("div", null, _react.default.createElement("h2", null, props.nombre), _react.default.createElement("h3", null, props.animal), _react.default.createElement("h3", null, props.raza));
 };
 
 var _default = Pet;
@@ -29601,24 +29608,44 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Componente - Se trata de un molde que permite crear nuevos componentes
 // Devuelve lo que se resuelve de Reac.createElement()
 // En este punto hemos creado el componente, pero no lo hemos usado todavía
-var App = function App() {
-  return _react.default.createElement("div", {}, [_react.default.createElement("h1", {}, "Adopt me!"), _react.default.createElement(_Pet.default, {
+// const App = () => {
+//   return React.createElement("div", {}, [
+//     React.createElement("h1", {}, "Adopt me!"),
+//     React.createElement(Pet, {
+//       nombre: "Leia",
+//       animal: "Perro",
+//       raza: "Chucho",
+//     }),
+//     React.createElement(Pet, {
+//       nombre: "Laika",
+//       animal: "Perro",
+//       raza: "Pastor Alemán",
+//     }),
+//     React.createElement(Pet, {
+//       nombre: "Luna",
+//       animal: "Gato",
+//       raza: "Siames",
+//     }),
+//   ]);
+//};
+const App = () => {
+  return _react.default.createElement("div", null, _react.default.createElement("h1", null, "Adopt Me!"), _react.default.createElement(_Pet.default, {
     nombre: "Leia",
     animal: "Perro",
     raza: "Chucho"
   }), _react.default.createElement(_Pet.default, {
     nombre: "Laika",
     animal: "Perro",
-    raza: "Pastor Alemán"
+    raza: "Paston Alem\xE1n"
   }), _react.default.createElement(_Pet.default, {
     nombre: "Luna",
     animal: "Gato",
-    raza: "Siames"
-  })]);
+    raza: "Siam\xE9s"
+  }));
 }; // Para usar el componente
 
 
-_reactDom.default.render(_react.default.createElement(App), document.getElementById("root")); // Podríamos poner createElement(App, {}, null), sim embargo es opcinal, ya que tiene varios constructores
+_reactDom.default.render(_react.default.createElement(App, null), document.getElementById("root")); // Podríamos poner createElement(App, {}, null), sim embargo es opcinal, ya que tiene varios constructores
 },{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./Pet":"Pet.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -29647,7 +29674,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54018" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51407" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
