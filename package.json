@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
-      "lint":"eslint \"src/**/*.{js,jsx}\" "
+    "lint": "eslint \"src/**/*.{js,jsx}\" --quiet"
   },
   "repository": {
     "type": "git",
@@ -19,8 +19,8 @@
   },
   "homepage": "https://github.com/BrianC9/adopta-me#readme",
   "devDependencies": {
-    "eslint": "^7.18.0",
-    "eslint-config-prettier": "^8.1.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
     "prettier": "^2.5.1"
   }
 }
