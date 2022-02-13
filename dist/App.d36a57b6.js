@@ -29566,7 +29566,7 @@ if ("development" === 'production') {
 } else {
   module.exports = require('./cjs/react-dom.development.js');
 }
-},{"./cjs/react-dom.development.js":"../node_modules/react-dom/cjs/react-dom.development.js"}],"Pet.js":[function(require,module,exports) {
+},{"./cjs/react-dom.development.js":"../node_modules/react-dom/cjs/react-dom.development.js"}],"SearchParams.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29574,24 +29574,35 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-// Props, propiedaes de un componente. Se pasan como un objeto
-// El flujo de información en React es Vertical de padre a hijo, nunca podremos modificar el componente padre, por ello le pasamos unas propiedades que únicamente alteran a la instancia de nuestro componente
-// const Pet = (props) => {
-//     return React.createElement("div", {}, [
-//         React.createElement("h1", {}, props.nombre),
-//         React.createElement("h2", {}, props.animal),
-//         React.createElement("h2", {}, props.raza),
-//     ]);
-// };
-const Pet = props => {
-  return _react.default.createElement("div", null, _react.default.createElement("h2", null, props.nombre), _react.default.createElement("h3", null, props.animal), _react.default.createElement("h3", null, props.raza));
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+const SearchParams = () => {
+  const [location, setLocation] = (0, _react.useState)(""); // const locationTupla = useState("");
+  // const location = locationTupla[0]
+  // const setLocation = locationTupla[1]
+  // function actualizaLocaiton(event) {
+  //     setLocation(event.target.value)
+  //     console.log(event.target.value)
+  // }
+
+  return _react.default.createElement("div", {
+    className: "search-params"
+  }, _react.default.createElement("form", null, _react.default.createElement("label", {
+    htmlFor: "location"
+  }, "location", _react.default.createElement("input", {
+    id: "location" // onChange={actualizaLocaiton} //Esta función es equivalente a la arrow function que le pasamos
+    ,
+    onChange: event => setLocation(event.target.value),
+    value: location,
+    placeholder: "Location"
+  })), _react.default.createElement("button", null, "Submit")));
 };
 
-var _default = Pet;
+var _default = SearchParams;
 exports.default = _default;
 },{"react":"../node_modules/react/index.js"}],"App.js":[function(require,module,exports) {
 "use strict";
@@ -29600,7 +29611,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
-var _Pet = _interopRequireDefault(require("./Pet"));
+var _SearchParams = _interopRequireDefault(require("./SearchParams"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29629,24 +29640,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   ]);
 //};
 const App = () => {
-  return _react.default.createElement("div", null, _react.default.createElement("h1", null, "Adopt Me!"), _react.default.createElement(_Pet.default, {
-    nombre: "Leia",
-    animal: "Perro",
-    raza: "Chucho"
-  }), _react.default.createElement(_Pet.default, {
-    nombre: "Laika",
-    animal: "Perro",
-    raza: "Paston Alem\xE1n"
-  }), _react.default.createElement(_Pet.default, {
-    nombre: "Luna",
-    animal: "Gato",
-    raza: "Siam\xE9s"
-  }));
+  return _react.default.createElement("div", null, _react.default.createElement("h1", null, "Adopt Me!"), _react.default.createElement(_SearchParams.default, null));
 }; // Para usar el componente
 
 
 _reactDom.default.render(_react.default.createElement(App, null), document.getElementById("root")); // Podríamos poner createElement(App, {}, null), sim embargo es opcinal, ya que tiene varios constructores
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./Pet":"Pet.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./SearchParams":"SearchParams.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -29674,7 +29673,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51407" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56824" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

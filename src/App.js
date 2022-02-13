@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 //Para ignorar el linter y decirle que React es un elemento global
 
-import Pet from './Pet'
+import SearchParams from "./SearchParams";
 
 // Componente - Se trata de un molde que permite crear nuevos componentes
 // Devuelve lo que se resuelve de Reac.createElement()
@@ -31,9 +31,7 @@ const App = () => {
   return (
     <div>
       <h1>Adopt Me!</h1>
-      <Pet nombre="Leia" animal="Perro" raza="Chucho" />
-      <Pet nombre="Laika" animal="Perro" raza="Paston Alemán" />
-      <Pet nombre="Luna" animal="Gato" raza="Siamés" />
+      <SearchParams />
     </div>
   )
 }
