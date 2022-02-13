@@ -2,15 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 //Para ignorar el linter y decirle que React es un elemento global
 
-// Props, propiedaes de un componente. Se pasan como un objeto
-// El flujo de información en React es Vertical de padre a hijo, nunca podremos modificar el componente padre, por ello le pasamos unas propiedades que únicamente alteran a la instancia de nuestro componente
-const Pet = (props) => {
-  return React.createElement("div", {}, [
-    React.createElement("h1", {}, props.nombre),
-    React.createElement("h2", {}, props.animal),
-    React.createElement("h2", {}, props.raza),
-  ]);
-};
+import Pet from './Pet'
 
 // Componente - Se trata de un molde que permite crear nuevos componentes
 // Devuelve lo que se resuelve de Reac.createElement()
