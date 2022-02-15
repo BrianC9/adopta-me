@@ -29580,8 +29580,13 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+const ANIMALS = ["pajaro", "gato", "perro", "conejo", "reptil"];
+
 const SearchParams = () => {
-  const [location, setLocation] = (0, _react.useState)(""); // const locationTupla = useState("");
+  const [location, setLocation] = (0, _react.useState)("");
+  const [animal, setAnimal] = (0, _react.useState)("");
+  const [raza, setRaza] = (0, _react.useState)("");
+  const razas = []; // const locationTupla = useState("");
   // const location = locationTupla[0]
   // const setLocation = locationTupla[1]
   // function actualizaLocaiton(event) {
@@ -29589,17 +29594,31 @@ const SearchParams = () => {
   //     console.log(event.target.value)
   // }
 
+  if (4 + 1 === 1) {
+    const [animal, setAnimal] = (0, _react.useState)("");
+  }
+
   return _react.default.createElement("div", {
     className: "search-params"
   }, _react.default.createElement("form", null, _react.default.createElement("label", {
     htmlFor: "location"
-  }, "location", _react.default.createElement("input", {
+  }, "Localizaci\xF3n", _react.default.createElement("input", {
     id: "location" // onChange={actualizaLocaiton} //Esta función es equivalente a la arrow function que le pasamos
     ,
     onChange: event => setLocation(event.target.value),
     value: location,
-    placeholder: "Location"
-  })), _react.default.createElement("button", null, "Submit")));
+    placeholder: "Localizaci\xF3n"
+  })), _react.default.createElement("label", {
+    htmlFor: "animal"
+  }, "Animal", _react.default.createElement("select", {
+    id: "animal",
+    value: animal,
+    onChange: e => setAnimal(e.target.value),
+    onBlur: e => setAnimal(e.target.value)
+  }, ANIMALS.map(animal => _react.default.createElement("option", {
+    value: animal,
+    key: animal
+  }, animal)))), _react.default.createElement("button", null, "Submit")));
 };
 
 var _default = SearchParams;
@@ -29673,7 +29692,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56824" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60353" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
