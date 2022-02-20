@@ -29566,7 +29566,80 @@ if ("development" === 'production') {
 } else {
   module.exports = require('./cjs/react-dom.development.js');
 }
-},{"./cjs/react-dom.development.js":"../node_modules/react-dom/cjs/react-dom.development.js"}],"SearchParams.js":[function(require,module,exports) {
+},{"./cjs/react-dom.development.js":"../node_modules/react-dom/cjs/react-dom.development.js"}],"Pet.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Props, propiedaes de un componente. Se pasan como un objeto
+// El flujo de información en React es Vertical de padre a hijo, nunca podremos modificar el componente padre, por ello le pasamos unas propiedades que únicamente alteran a la instancia de nuestro componente
+// const Pet = (props) => {
+//     return React.createElement("div", {}, [
+//         React.createElement("h1", {}, props.nombre),
+//         React.createElement("h2", {}, props.animal),
+//         React.createElement("h2", {}, props.raza),
+//     ]);
+// };
+const Pet = props => {
+  return _react.default.createElement("div", null, _react.default.createElement("h2", null, props.name), _react.default.createElement("h3", null, props.animal), _react.default.createElement("h3", null, props.breed));
+};
+
+var _default = Pet;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js"}],"useBreedList.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = useBreedList;
+
+var _react = require("react");
+
+//Lo que vamos a hacer es almacenar las razas de los diferentes animales en la memoria local,
+// Ej: Seleccionamos perro y nos devuelve Husky, Frieza; seleccionamos Cat y nos devuelve Siamés, etc
+// Queremos que las razas de los perros se queden almacenadas en la memoria local para no tener que hacer otra petición
+const localCache = {};
+
+function useBreedList(animal) {
+  console.log(localCache);
+  const [breedList, setBreedList] = (0, _react.useState)([]);
+  const [status, setStatus] = (0, _react.useState)('unloaded');
+  (0, _react.useEffect)(() => {
+    if (!animal) {
+      setBreedList([]);
+    } else if (localCache[animal]) {
+      // Si tengo algo en la memoria local, es decir, si ya lo había solicitado anteriormente, quiero que coja de ahi los datos
+      setBreedList(localCache[animal]);
+    } else {
+      // si no se da ninguna, solicítalo a la API
+      requesBreedList();
+    }
+
+    async function requesBreedList() {
+      // Antes de solicitar la raza a la API vamos a limpiar lo que tengamos almacenado ahi, 
+      // De esta manera no habrá problemas si buscamos gatos o perros y ya habían razas ahí almacenadas
+      // Por ejemplo, en nuestra memoria local tenemos ya almacenado, razas de perro y seleccioamos un gato, puede darse que nos diga un gato husky
+      setBreedList([]);
+      setStatus('loading');
+      const response = await fetch(`http://pets-v2.dev-apis.com/breeds?animal=${animal}`);
+      const json = await response.json();
+      localCache[animal] = json.breeds || [];
+      setBreedList(localCache[animal]);
+      setStatus('loaded');
+    }
+  }, [animal]); // Esto actualizará el listado de razas cada vez que cambie animal
+
+  return [breedList, status];
+}
+},{"react":"../node_modules/react/index.js"}],"SearchParams.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29576,17 +29649,42 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _Pet = _interopRequireDefault(require("./Pet"));
+
+var _useBreedList = _interopRequireDefault(require("./useBreedList"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-const ANIMALS = ["pajaro", "gato", "perro", "conejo", "reptil"];
+const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
 const SearchParams = () => {
   const [location, setLocation] = (0, _react.useState)("");
   const [animal, setAnimal] = (0, _react.useState)("");
-  const [raza, setRaza] = (0, _react.useState)("");
-  const razas = []; // const locationTupla = useState("");
+  const [breed, setbreed] = (0, _react.useState)("");
+  const [pets, setPets] = (0, _react.useState)([]); // Vamos a traeros una lista de mascotas
+  //const breeds = []
+
+  const [breeds] = (0, _useBreedList.default)(animal);
+  (0, _react.useEffect)(() => {
+    requestPets();
+  }, []); // useEffect (()=>{},[])Esto le está diciendo al useEffect, cuando debería volver a ejecutarse, si no lo ponemos estmaos diciendole que lo ejecute cada vez que se hace un render, algo como un bucle infinito
+  // [animal] -> Le estamos diciendo que lo ejecute sólo cuando el estado de animal cambie
+  // Ejemplo de un useEffect que implementa un garbage collector -> Más seguridad en caso de que [animal] se elimine del DOM 
+  // useEffect(() => {
+  //     const temporizador = setTimeout(() => console.log("hi"), 3000);
+  //     return () => clearTimeout(temporizador);
+  // }, [animal])
+
+  async function requestPets() {
+    const response = await fetch(`http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`);
+    const json = await response.json();
+    console.log(json);
+    setPets(json.pets);
+  } // const locationTupla = useState("");
   // const location = locationTupla[0]
   // const setLocation = locationTupla[1]
   // function actualizaLocaiton(event) {
@@ -29594,9 +29692,6 @@ const SearchParams = () => {
   //     console.log(event.target.value)
   // }
 
-  if (4 + 1 === 1) {
-    const [animal, setAnimal] = (0, _react.useState)("");
-  }
 
   return _react.default.createElement("div", {
     className: "search-params"
@@ -29615,20 +29710,39 @@ const SearchParams = () => {
     value: animal,
     onChange: e => setAnimal(e.target.value),
     onBlur: e => setAnimal(e.target.value)
-  }, ANIMALS.map(animal => _react.default.createElement("option", {
+  }, ANIMALS.map(animal => // No modifica el array, sino que devuelve uno nuevo
+  _react.default.createElement("option", {
     value: animal,
     key: animal
-  }, animal)))), _react.default.createElement("button", null, "Submit")));
+  }, animal)))), _react.default.createElement("label", {
+    htmlFor: "breed"
+  }, "Animal", _react.default.createElement("select", {
+    id: "animal",
+    value: animal,
+    onChange: e => setbreed(e.target.value),
+    onBlur: e => setbreed(e.target.value)
+  }, breeds.map(breed => // No modifica el array, sino que devuelve uno nuevo
+  _react.default.createElement("option", {
+    value: breed,
+    key: breed
+  }, breed)))), _react.default.createElement("button", null, "Submit")), pets.map(pet => _react.default.createElement(_Pet.default, {
+    name: pet.name,
+    animal: pet.animal,
+    breed: pet.breed,
+    key: pet.id
+  })));
 };
 
 var _default = SearchParams;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Pet":"Pet.js","./useBreedList":"useBreedList.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
+
+var _Pet = _interopRequireDefault(require("./Pet"));
 
 var _SearchParams = _interopRequireDefault(require("./SearchParams"));
 
@@ -29664,7 +29778,7 @@ const App = () => {
 
 
 _reactDom.default.render(_react.default.createElement(App, null), document.getElementById("root")); // Podríamos poner createElement(App, {}, null), sim embargo es opcinal, ya que tiene varios constructores
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./SearchParams":"SearchParams.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./Pet":"Pet.js","./SearchParams":"SearchParams.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -29692,7 +29806,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60353" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53619" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

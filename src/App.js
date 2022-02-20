@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Pet from "./Pet";
 //Para ignorar el linter y decirle que React es un elemento global
 
 import SearchParams from "./SearchParams";
