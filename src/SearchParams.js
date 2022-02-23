@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import Pet from "./Pet";
 import React from "react";
 import useBreedList from "./useBreedList";
+import Results from "./Results";
 
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"]
 
 const SearchParams = () => {
     const [location, setLocation] = useState("");
     const [animal, setAnimal] = useState("");
-    const [breed, setbreed] = useState("");
+    const [breed, setBreed] = useState("");
     const [pets, setPets] = useState([]); // Vamos a traeros una lista de mascotas
     //const breeds = []
     const [breeds] = useBreedList(animal);
@@ -29,7 +29,6 @@ const SearchParams = () => {
         );
         const json = await response.json();
 
-        console.log(json)
         setPets(json.pets)
     }
     // const locationTupla = useState("");
@@ -49,34 +48,33 @@ const SearchParams = () => {
                     Localización
                     <input id="location"
                         // onChange={actualizaLocaiton} //Esta función es equivalente a la arrow function que le pasamos
-                        onChange={event => setLocation(event.target.value)}
+                        onChange={(event) => setLocation(event.target.value)}
                         value={location}
                         placeholder="Localización" />
                 </label>
                 <label htmlFor="animal">
                     Animal
-                    <select id="animal"
+                    <select
+                        id="animal"
                         value={animal}
-                        onChange={e => setAnimal(e.target.value)}
-                        onBlur={e => setAnimal(e.target.value)}
+                        onChange={(e) => setAnimal(e.target.value)}
+                        onBlur={(e) => setAnimal(e.target.value)}
                     >
-                        {
-                            ANIMALS.map(animal => ( // No modifica el array, sino que devuelve uno nuevo
-                                <option
-                                    value={animal}
-                                    key={animal}>
-                                    {animal}
-                                </option>
-                            ))
-                        }
+                        <option />
+                        {ANIMALS.map((animal) => (
+                            <option key={animal} value={animal}>
+                                {animal}
+                            </option>
+                        ))}
                     </select>
                 </label>
                 <label htmlFor="breed">
-                    Animal
-                    <select id="animal"
-                        value={animal}
-                        onChange={e => setbreed(e.target.value)}
-                        onBlur={e => setbreed(e.target.value)}
+                    Raza
+                    <select id="breed"
+                        disabled={!breeds.length}
+                        value={breed}
+                        onChange={e => setBreed(e.target.value)}
+                        onBlur={e => setBreed(e.target.value)}
                     >
                         {
                             breeds.map(breed => ( // No modifica el array, sino que devuelve uno nuevo
@@ -91,17 +89,7 @@ const SearchParams = () => {
                 </label>
                 <button>Submit</button>
             </form>
-            {pets.map((pet) => (
-                <Pet
-                    name={pet.name}
-                    animal={pet.animal}
-                    breed={pet.breed}
-                    key={pet.id}
-                />
-
-            )
-            )}
-
+            <Results pets={pets} />
         </div>
     )
 }

@@ -29587,8 +29587,31 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //         React.createElement("h2", {}, props.raza),
 //     ]);
 // };
-const Pet = props => {
-  return _react.default.createElement("div", null, _react.default.createElement("h2", null, props.name), _react.default.createElement("h3", null, props.animal), _react.default.createElement("h3", null, props.breed));
+const Pet = ({
+  name,
+  animal,
+  breed,
+  images,
+  location,
+  id
+}) => {
+  let hero = 'http://pets-images.dev-apis.com/pets/none.jpg';
+
+  if (images.length) {
+    hero = images[0];
+  }
+
+  return _react.default.createElement("a", {
+    href: `/details/${id}`,
+    className: "pet"
+  }, _react.default.createElement("div", {
+    className: "image-container"
+  }, _react.default.createElement("img", {
+    src: hero,
+    alt: name
+  })), _react.default.createElement("div", {
+    className: "info"
+  }, _react.default.createElement("h1", null, name), _react.default.createElement("h2", null, `${animal} - ${breed} - ${location}`)));
 };
 
 var _default = Pet;
@@ -29601,7 +29624,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = useBreedList;
 
-var _react = require("react");
+var _react = _interopRequireWildcard(require("react"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 //Lo que vamos a hacer es almacenar las razas de los diferentes animales en la memoria local,
 // Ej: Seleccionamos perro y nos devuelve Husky, Frieza; seleccionamos Cat y nos devuelve Siamés, etc
@@ -29609,7 +29636,6 @@ var _react = require("react");
 const localCache = {};
 
 function useBreedList(animal) {
-  console.log(localCache);
   const [breedList, setBreedList] = (0, _react.useState)([]);
   const [status, setStatus] = (0, _react.useState)('unloaded');
   (0, _react.useEffect)(() => {
@@ -29639,7 +29665,50 @@ function useBreedList(animal) {
 
   return [breedList, status];
 }
-},{"react":"../node_modules/react/index.js"}],"SearchParams.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js"}],"Results.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _Pet = _interopRequireDefault(require("./Pet"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const Results = ({
+  pets
+}) => {
+  return _react.default.createElement("div", {
+    className: "search"
+  }, !pets.length ? _react.default.createElement("h2", null, "No pets found") : pets.map(pet => {
+    return _react.default.createElement(_Pet.default, {
+      animal: pet.animal,
+      name: pet.name,
+      key: pet.id,
+      breed: pet.breed,
+      images: pet.images,
+      location: `${pet.city}, ${pet.state}`,
+      id: pet.id
+    });
+    /*
+    Con el spread operator conseguimos lo mismo, ya que deconstruyendo el objeto, accedemos a cada variable 
+    Sin embargo, la legibilidad es muy mala a la hora de mantener código.
+    Otro aspecto a tener en cuenta es que las key del objeto deberían llamarse igual que en la API, por lo tanto si es una API externa, debemos asegurarnos
+    <Pet 
+    {...pet}
+    key={pet.id}
+    />
+    */
+  }));
+};
+
+var _default = Results;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","./Pet":"Pet.js"}],"SearchParams.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29649,9 +29718,9 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _Pet = _interopRequireDefault(require("./Pet"));
-
 var _useBreedList = _interopRequireDefault(require("./useBreedList"));
+
+var _Results = _interopRequireDefault(require("./Results"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29664,7 +29733,7 @@ const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 const SearchParams = () => {
   const [location, setLocation] = (0, _react.useState)("");
   const [animal, setAnimal] = (0, _react.useState)("");
-  const [breed, setbreed] = (0, _react.useState)("");
+  const [breed, setBreed] = (0, _react.useState)("");
   const [pets, setPets] = (0, _react.useState)([]); // Vamos a traeros una lista de mascotas
   //const breeds = []
 
@@ -29682,7 +29751,6 @@ const SearchParams = () => {
   async function requestPets() {
     const response = await fetch(`http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`);
     const json = await response.json();
-    console.log(json);
     setPets(json.pets);
   } // const locationTupla = useState("");
   // const location = locationTupla[0]
@@ -29710,32 +29778,29 @@ const SearchParams = () => {
     value: animal,
     onChange: e => setAnimal(e.target.value),
     onBlur: e => setAnimal(e.target.value)
-  }, ANIMALS.map(animal => // No modifica el array, sino que devuelve uno nuevo
-  _react.default.createElement("option", {
-    value: animal,
-    key: animal
+  }, _react.default.createElement("option", null), ANIMALS.map(animal => _react.default.createElement("option", {
+    key: animal,
+    value: animal
   }, animal)))), _react.default.createElement("label", {
     htmlFor: "breed"
-  }, "Animal", _react.default.createElement("select", {
-    id: "animal",
-    value: animal,
-    onChange: e => setbreed(e.target.value),
-    onBlur: e => setbreed(e.target.value)
+  }, "Raza", _react.default.createElement("select", {
+    id: "breed",
+    disabled: !breeds.length,
+    value: breed,
+    onChange: e => setBreed(e.target.value),
+    onBlur: e => setBreed(e.target.value)
   }, breeds.map(breed => // No modifica el array, sino que devuelve uno nuevo
   _react.default.createElement("option", {
     value: breed,
     key: breed
-  }, breed)))), _react.default.createElement("button", null, "Submit")), pets.map(pet => _react.default.createElement(_Pet.default, {
-    name: pet.name,
-    animal: pet.animal,
-    breed: pet.breed,
-    key: pet.id
-  })));
+  }, breed)))), _react.default.createElement("button", null, "Submit")), _react.default.createElement(_Results.default, {
+    pets: pets
+  }));
 };
 
 var _default = SearchParams;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./Pet":"Pet.js","./useBreedList":"useBreedList.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./useBreedList":"useBreedList.js","./Results":"Results.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -29806,7 +29871,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53619" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58618" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
