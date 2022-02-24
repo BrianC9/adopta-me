@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 // Switch se encarga de renderizar únicamente las rutas que cumplan el path indicado, evitando así que se rendericen varias Routes que coicidan
 import Details from "./Details";
 //Para ignorar el linter y decirle que React es un elemento global
@@ -32,17 +32,21 @@ import SearchParams from "./SearchParams";
 //};
 const App = () => {
   return (
-    <div>
-      <h1>Adopt Me!</h1>
-      <Router>
-        <Switch>
-          <Route path="/details/:id"> {/*// Con : pasamos parámetros a las rutas */}
-            <Details />
-          </Route>
-          <Route path="/">
-            <SearchParams />
-          </Route></Switch>
-      </Router>
+    <div><Router>
+      <header>
+        <Link to="/">
+          <h1>Adopt Me!</h1>
+        </Link>
+      </header>
+
+      <Switch>
+        <Route path="/details/:id"> {/*// Con : pasamos parámetros a las rutas */}
+          <Details />
+        </Route>
+        <Route path="/">
+          <SearchParams />
+        </Route></Switch>
+    </Router>
     </div>
   )
 }

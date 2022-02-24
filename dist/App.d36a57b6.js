@@ -33738,17 +33738,69 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _reactRouterDom = require("react-router-dom");
 
-const Details = () => {
-  return _react.default.createElement("h2", null, "Holaa soy la pagina de detalles");
-};
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-var _default = Details;
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+class Details extends _react.Component {
+  constructor() {
+    super();
+    this.state = {
+      loading: true
+    };
+  }
+
+  async componentDidMount() {
+    // componentDidMount es el método que se llama tan pronto se renderiza el componente por PRIMERA VEZ
+    const response = await fetch(`http://pets-v2.dev-apis.com/pets?id=${this.props.match.params.id}`);
+    const json = await response.json();
+    this.setState(Object.assign({
+      loading: false
+    }, json.pets[0])); // El Object.assign, funciona de la siguiente manera
+    // this.setState({
+    //     loading: false,
+    //     name = json.pets[0].name,
+    //     breed = json.pets{0}.breed,
+    //     animal = json.pets[0].animal,
+    //     ...etc;
+    // })
+  }
+
+  render() {
+    const {
+      animal,
+      breed,
+      city,
+      state,
+      description,
+      name
+    } = this.state;
+
+    if (this.state.loading) {
+      // El stado de nuestro componente nos permite conocer cuando se ha renderizado el cotenido, gracias al método componenteDidMount()
+      return _react.default.createElement("h2", null, "Cargando...");
+    }
+
+    return _react.default.createElement("div", {
+      className: "details"
+    }, _react.default.createElement("div", null, _react.default.createElement("h1", null, " ", name), _react.default.createElement("h2", null, animal, " - ", breed, " - ", city, ", ", state), _react.default.createElement("button", null, "Adopt ", name), _react.default.createElement("p", null, description)));
+  }
+
+} // const Details = () => {
+//     return (
+//         <h2>Holaa soy la pagina de detalles</h2>
+//     )
+// };
+
+
+var _default = (0, _reactRouterDom.withRouter)(Details);
+
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"useBreedList.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"useBreedList.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33807,6 +33859,8 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
+var _reactRouterDom = require("react-router-dom");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Props, propiedaes de un componente. Se pasan como un objeto
@@ -33832,8 +33886,8 @@ const Pet = ({
     hero = images[0];
   }
 
-  return _react.default.createElement("a", {
-    href: `/details/${id}`,
+  return _react.default.createElement(_reactRouterDom.Link, {
+    to: `/details/${id}`,
     className: "pet"
   }, _react.default.createElement("div", {
     className: "image-container"
@@ -33847,7 +33901,7 @@ const Pet = ({
 
 var _default = Pet;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"Results.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"Results.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34023,7 +34077,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   ]);
 //};
 const App = () => {
-  return _react.default.createElement("div", null, _react.default.createElement("h1", null, "Adopt Me!"), _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement(_reactRouterDom.Switch, null, _react.default.createElement(_reactRouterDom.Route, {
+  return _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement("header", null, _react.default.createElement(_reactRouterDom.Link, {
+    to: "/"
+  }, _react.default.createElement("h1", null, "Adopt Me!"))), _react.default.createElement(_reactRouterDom.Switch, null, _react.default.createElement(_reactRouterDom.Route, {
     path: "/details/:id"
   }, " ", _react.default.createElement(_Details.default, null)), _react.default.createElement(_reactRouterDom.Route, {
     path: "/"
