@@ -1,7 +1,7 @@
 import React from "react";
 import { Component } from "react";
 import { withRouter } from "react-router-dom";
-
+import Carousel from "./Carousel";
 class Details extends Component {
     // constructor() {
     //     super();
@@ -34,7 +34,7 @@ class Details extends Component {
     }
 
     render() {
-        const { animal, breed, city, state, description, name } = this.state
+        const { animal, breed, city, state, description, name, images } = this.state
         if (this.state.loading) { // El stado de nuestro componente nos permite conocer cuando se ha renderizado el cotenido, gracias al método componenteDidMount()
             return (
                 <h2>Cargando...</h2>
@@ -44,6 +44,8 @@ class Details extends Component {
             <div className="details">
                 <div>
                     < h1 > {name}</h1 >
+                    <Carousel images={images} />
+
                     {/* <h2>{`${animal} - ${breed} - ${city}, ${state}`}</h2> */}
                     <h2>{animal} - {breed} - {city}, {state}</h2>
 

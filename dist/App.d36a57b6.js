@@ -34939,7 +34939,90 @@ if ("development" === 'production') {
 } else {
   module.exports = require('./cjs/react-jsx-runtime.development.js');
 }
-},{"./cjs/react-jsx-runtime.development.js":"../node_modules/react/cjs/react-jsx-runtime.development.js"}],"Details.js":[function(require,module,exports) {
+},{"./cjs/react-jsx-runtime.development.js":"../node_modules/react/cjs/react-jsx-runtime.development.js"}],"Carousel.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = require("react");
+
+var _jsxRuntime = require("react/jsx-runtime");
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+class Carousel extends _react.Component {
+  constructor(...args) {
+    super(...args);
+
+    _defineProperty(this, "state", {
+      // Con esto ponemos por defecto la primera foto, es decir, del array de imágenes que recibimos como Prop, queremos que se muestre la primera
+      active: 0
+    });
+
+    _defineProperty(this, "handleIndexClick", event => {
+      //Las arrow function funcionan de la siguiente manera al interactuar con el this:
+      // Cuando creamos una arrow function, no crea un contexto nuevo para el this para el contexto en el que está
+      // Por lo tanto, cuando llame a handleIndexClick, no cogerá el this desde donde se usa, sino que lo hará desde donde se ha creado, es decir, desde el objeto
+      // En conclusión, si necesitamos obtener el this y que tenga el contexto de nuestro class Component, las arrow function, mantendrán el contexto
+      this.setState({
+        active: +event.target.dataset.index //Coercion de tipos javascript
+
+      });
+      console.log(this);
+    });
+  }
+
+  // Si dejasemos esto como una función, estamos perdiendo el contexto del this, es decir, nos enviaría un error
+  // ya que el this no está haciendo referencia al objeto
+  render() {
+    const {
+      active
+    } = this.state;
+    const {
+      images
+    } = this.props;
+    return (
+      /*#__PURE__*/
+      (0, _jsxRuntime.jsxs)("div", {
+        className: "carousel",
+        children: [
+        /*#__PURE__*/
+        (0, _jsxRuntime.jsx)("img", {
+          src: images[active],
+          alt: "animal"
+        }),
+        /*#__PURE__*/
+        (0, _jsxRuntime.jsx)("div", {
+          className: "carousel-smaller",
+          children: images.map((photo, index) =>
+          /*#__PURE__*/
+          (0, _jsxRuntime.jsx)("img", {
+            src: photo,
+            className: index === active ? "active" : "",
+            alt: "animal thumbnail",
+            "data-index": index,
+            onClick: this.handleIndexClick // onClick={this.handleIndexClick.bind(this)}
+            // Haciendo un bind de esta función con el this, estamos uniendo nuestra clase con el objeto que la utiliza
+
+          }, photo))
+        })]
+      })
+    );
+  }
+
+}
+
+_defineProperty(Carousel, "defaultProps", {
+  // Lo hacemos estático para que todos los componentes tengan esta foto en caso de que no se pase una prop al componente
+  images: ['http://pets-images.dev-apis.com/pets/none.jpg']
+});
+
+var _default = Carousel;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"Details.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34951,7 +35034,11 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _reactRouterDom = require("react-router-dom");
 
+var _Carousel = _interopRequireDefault(require("./Carousel"));
+
 var _jsxRuntime = require("react/jsx-runtime");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -34991,7 +35078,8 @@ class Details extends _react.Component {
       city,
       state,
       description,
-      name
+      name,
+      images
     } = this.state;
 
     if (this.state.loading) {
@@ -35015,6 +35103,10 @@ class Details extends _react.Component {
           /*#__PURE__*/
           (0, _jsxRuntime.jsxs)("h1", {
             children: [" ", name]
+          }),
+          /*#__PURE__*/
+          (0, _jsxRuntime.jsx)(_Carousel.default, {
+            images: images
           }),
           /*#__PURE__*/
           (0, _jsxRuntime.jsxs)("h2", {
@@ -35043,7 +35135,7 @@ class Details extends _react.Component {
 var _default = (0, _reactRouterDom.withRouter)(Details);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"useBreedList.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./Carousel":"Carousel.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"useBreedList.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35470,7 +35562,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52070" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60670" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
