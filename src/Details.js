@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Component } from "react";
 import { withRouter } from "react-router-dom";
 import Carousel from "./Carousel";
+import ErrorBoundary from "./ErrorBoundary";
+import ThemeContext from "./ThemeContext";
 class Details extends Component {
     // constructor() {
     //     super();
@@ -11,7 +13,7 @@ class Details extends Component {
     // }
     // Cuando instalamos las dependecias para trabajar con class components, podemos prescindir del constructor y trabaar con atributos de clase de forma más comoda
     state =
-        { loading: true }
+        { loading: true, }
     async componentDidMount() { // componentDidMount es el método que se llama tan pronto se renderiza el componente por PRIMERA VEZ
         const response = await fetch(
             `http://pets-v2.dev-apis.com/pets?id=${this.props.match.params.id}`
@@ -48,8 +50,10 @@ class Details extends Component {
 
                     {/* <h2>{`${animal} - ${breed} - ${city}, ${state}`}</h2> */}
                     <h2>{animal} - {breed} - {city}, {state}</h2>
+                    <ThemeContext.Consumer>
+                        {([theme]) => (<button style={{ background: theme }}>Adopt {name}</button>)}
 
-                    <button>Adopt {name}</button>
+                    </ThemeContext.Consumer>
                     <p>{description}</p>
                 </div>
             </div>
@@ -63,5 +67,11 @@ class Details extends Component {
 //         <h2>Holaa soy la pagina de detalles</h2>
 //     )
 // };
-
-export default withRouter(Details);
+const DetailsWithRouter = withRouter(Details);
+export default function DetailsWithErrorBoundary() {
+    return (
+        <ErrorBoundary>
+            <DetailsWithRouter />
+        </ErrorBoundary>
+    )
+}; 

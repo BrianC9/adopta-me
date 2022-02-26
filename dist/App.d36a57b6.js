@@ -35022,7 +35022,7 @@ _defineProperty(Carousel, "defaultProps", {
 
 var _default = Carousel;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"Details.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"ErrorBoundary.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35030,11 +35030,107 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _react = require("react");
+
+var _reactRouterDom = require("react-router-dom");
+
+var _jsxRuntime = require("react/jsx-runtime");
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+class ErrorBoundary extends _react.Component {
+  constructor(...args) {
+    super(...args);
+
+    _defineProperty(this, "state", {
+      hasError: false
+    });
+  }
+
+  static getDeriveStateFromError() {
+    return {
+      hasError: true,
+      redirect: false
+    };
+  }
+
+  componentDidCatch(error, info) {
+    // El componente tiene este ciclo para capturar errores
+    // Log to service errors PAA Sentrym Azure Monitor, New Relic, etc
+    console.error("ErrroBoundary ha capturado un error", error, info);
+    setTimeout(() => this.setState({
+      redirect: true
+    }), 3000);
+  }
+
+  render() {
+    if (this.state.redirect) {
+      return (
+        /*#__PURE__*/
+        (0, _jsxRuntime.jsx)(_reactRouterDom.Redirect, {
+          to: "/"
+        })
+      );
+    } else if (this.state.hasError) {
+      return (
+        /*#__PURE__*/
+        (0, _jsxRuntime.jsxs)("h2", {
+          children: ["Ha ocurrido un error. ",
+          /*#__PURE__*/
+          (0, _jsxRuntime.jsx)(_reactRouterDom.Link, {
+            to: "/",
+            children: "Click aqu\xED"
+          }), " para regresar a la pagina de incio o espera tres segundos"]
+        })
+      );
+    }
+
+    return this.props.children;
+    /* 
+    this.props.children -> Hace referencia al contenido que se encuentra dentro de las etiquetas del componente 
+    <ErrorBoundary>
+    <h1>This is my page</h1>
+    </ErrorBoundary>
+    
+    */
+  }
+
+}
+
+var _default = ErrorBoundary;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"ThemeContext.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = require("react");
+
+const ThemeContext =
+/*#__PURE__*/
+(0, _react.createContext)(["green", function () {}]);
+var _default = ThemeContext;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js"}],"Details.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = DetailsWithErrorBoundary;
+
 var _react = _interopRequireWildcard(require("react"));
 
 var _reactRouterDom = require("react-router-dom");
 
 var _Carousel = _interopRequireDefault(require("./Carousel"));
+
+var _ErrorBoundary = _interopRequireDefault(require("./ErrorBoundary"));
+
+var _ThemeContext = _interopRequireDefault(require("./ThemeContext"));
 
 var _jsxRuntime = require("react/jsx-runtime");
 
@@ -35113,8 +35209,15 @@ class Details extends _react.Component {
             children: [animal, " - ", breed, " - ", city, ", ", state]
           }),
           /*#__PURE__*/
-          (0, _jsxRuntime.jsxs)("button", {
-            children: ["Adopt ", name]
+          (0, _jsxRuntime.jsx)(_ThemeContext.default.Consumer, {
+            children: ([theme]) =>
+            /*#__PURE__*/
+            (0, _jsxRuntime.jsxs)("button", {
+              style: {
+                background: theme
+              },
+              children: ["Adopt ", name]
+            })
           }),
           /*#__PURE__*/
           (0, _jsxRuntime.jsx)("p", {
@@ -35132,10 +35235,21 @@ class Details extends _react.Component {
 // };
 
 
-var _default = (0, _reactRouterDom.withRouter)(Details);
+const DetailsWithRouter = (0, _reactRouterDom.withRouter)(Details);
 
-exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./Carousel":"Carousel.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"useBreedList.js":[function(require,module,exports) {
+function DetailsWithErrorBoundary() {
+  return (
+    /*#__PURE__*/
+    (0, _jsxRuntime.jsx)(_ErrorBoundary.default, {
+      children:
+      /*#__PURE__*/
+      (0, _jsxRuntime.jsx)(DetailsWithRouter, {})
+    })
+  );
+}
+
+;
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./Carousel":"Carousel.js","./ErrorBoundary":"ErrorBoundary.js","./ThemeContext":"ThemeContext.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"useBreedList.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35323,6 +35437,8 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _ThemeContext = _interopRequireDefault(require("./ThemeContext"));
+
 var _useBreedList = _interopRequireDefault(require("./useBreedList"));
 
 var _Results = _interopRequireDefault(require("./Results"));
@@ -35345,6 +35461,7 @@ const SearchParams = () => {
   //const breeds = []
 
   const [breeds] = (0, _useBreedList.default)(animal);
+  const [theme, setTheme] = (0, _react.useContext)(_ThemeContext.default);
   (0, _react.useEffect)(() => {
     requestPets();
   }, []); // useEffect (()=>{},[])Esto le está diciendo al useEffect, cuando debería volver a ejecutarse, si no lo ponemos estmaos diciendole que lo ejecute cada vez que se hace un render, algo como un bucle infinito
@@ -35430,7 +35547,37 @@ const SearchParams = () => {
           })]
         }),
         /*#__PURE__*/
+        (0, _jsxRuntime.jsxs)("label", {
+          htmlFor: "theme",
+          children: ["Theme",
+          /*#__PURE__*/
+          (0, _jsxRuntime.jsxs)("select", {
+            value: theme,
+            onChange: e => setTheme(e.target.value),
+            onBlur: e => setTheme(e.target.value),
+            children: [
+            /*#__PURE__*/
+            (0, _jsxRuntime.jsx)("option", {
+              value: "darkblue",
+              children: "Dark Blue"
+            }),
+            /*#__PURE__*/
+            (0, _jsxRuntime.jsx)("option", {
+              value: "peru",
+              children: "Peru"
+            }),
+            /*#__PURE__*/
+            (0, _jsxRuntime.jsx)("option", {
+              value: "mediumorchid",
+              children: "Medium Orchid"
+            })]
+          })]
+        }),
+        /*#__PURE__*/
         (0, _jsxRuntime.jsx)("button", {
+          style: {
+            backgroundColor: theme
+          },
           children: "Submit"
         })]
       }),
@@ -35444,16 +35591,18 @@ const SearchParams = () => {
 
 var _default = SearchParams;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./useBreedList":"useBreedList.js","./Results":"Results.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./ThemeContext":"ThemeContext.js","./useBreedList":"useBreedList.js","./Results":"Results.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
-var _react = _interopRequireDefault(require("react"));
+var _react = require("react");
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
 var _reactRouterDom = require("react-router-dom");
 
 var _Details = _interopRequireDefault(require("./Details"));
+
+var _ThemeContext = _interopRequireDefault(require("./ThemeContext"));
 
 var _SearchParams = _interopRequireDefault(require("./SearchParams"));
 
@@ -35487,44 +35636,50 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   ]);
 //};
 const App = () => {
+  const themeHook = (0, _react.useState)("lightblue");
   return (
     /*#__PURE__*/
-    (0, _jsxRuntime.jsx)("div", {
+    (0, _jsxRuntime.jsx)(_ThemeContext.default.Provider, {
+      value: themeHook,
       children:
       /*#__PURE__*/
-      (0, _jsxRuntime.jsxs)(_reactRouterDom.BrowserRouter, {
-        children: [
+      (0, _jsxRuntime.jsx)("div", {
+        children:
         /*#__PURE__*/
-        (0, _jsxRuntime.jsx)("header", {
-          children:
-          /*#__PURE__*/
-          (0, _jsxRuntime.jsx)(_reactRouterDom.Link, {
-            to: "/",
-            children:
-            /*#__PURE__*/
-            (0, _jsxRuntime.jsx)("h1", {
-              children: "Adopt Me!"
-            })
-          })
-        }),
-        /*#__PURE__*/
-        (0, _jsxRuntime.jsxs)(_reactRouterDom.Switch, {
+        (0, _jsxRuntime.jsxs)(_reactRouterDom.BrowserRouter, {
           children: [
           /*#__PURE__*/
-          (0, _jsxRuntime.jsxs)(_reactRouterDom.Route, {
-            path: "/details/:id",
-            children: [" ",
-            /*#__PURE__*/
-            (0, _jsxRuntime.jsx)(_Details.default, {})]
-          }),
-          /*#__PURE__*/
-          (0, _jsxRuntime.jsx)(_reactRouterDom.Route, {
-            path: "/",
+          (0, _jsxRuntime.jsx)("header", {
             children:
             /*#__PURE__*/
-            (0, _jsxRuntime.jsx)(_SearchParams.default, {})
+            (0, _jsxRuntime.jsx)(_reactRouterDom.Link, {
+              to: "/",
+              children:
+              /*#__PURE__*/
+              (0, _jsxRuntime.jsx)("h1", {
+                children: "Adopt Me!"
+              })
+            })
+          }),
+          /*#__PURE__*/
+          (0, _jsxRuntime.jsxs)(_reactRouterDom.Switch, {
+            children: [
+            /*#__PURE__*/
+            (0, _jsxRuntime.jsxs)(_reactRouterDom.Route, {
+              path: "/details/:id",
+              children: [" ",
+              /*#__PURE__*/
+              (0, _jsxRuntime.jsx)(_Details.default, {})]
+            }),
+            /*#__PURE__*/
+            (0, _jsxRuntime.jsx)(_reactRouterDom.Route, {
+              path: "/",
+              children:
+              /*#__PURE__*/
+              (0, _jsxRuntime.jsx)(_SearchParams.default, {})
+            })]
           })]
-        })]
+        })
       })
     })
   );
@@ -35534,7 +35689,7 @@ const App = () => {
 _reactDom.default.render(
 /*#__PURE__*/
 (0, _jsxRuntime.jsx)(App, {}), document.getElementById("root")); // Podríamos poner createElement(App, {}, null), sim embargo es opcinal, ya que tiene varios constructores
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./Details":"Details.js","./SearchParams":"SearchParams.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./Details":"Details.js","./ThemeContext":"ThemeContext.js","./SearchParams":"SearchParams.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

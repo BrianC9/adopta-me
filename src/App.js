@@ -1,11 +1,12 @@
-import React from "react";
+import { React, useState } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 // Switch se encarga de renderizar únicamente las rutas que cumplan el path indicado, evitando así que se rendericen varias Routes que coicidan
 import Details from "./Details";
 //Para ignorar el linter y decirle que React es un elemento global
-
+import ThemeContext from "./ThemeContext";
 import SearchParams from "./SearchParams";
+
 
 // Componente - Se trata de un molde que permite crear nuevos componentes
 // Devuelve lo que se resuelve de Reac.createElement()
@@ -31,23 +32,27 @@ import SearchParams from "./SearchParams";
 //   ]);
 //};
 const App = () => {
+  const themeHook = useState("lightblue")
   return (
-    <div><Router>
-      <header>
-        <Link to="/">
-          <h1>Adopt Me!</h1>
-        </Link>
-      </header>
+    <ThemeContext.Provider value={themeHook}>
+      <div>
+        <Router>
+          <header>
+            <Link to="/">
+              <h1>Adopt Me!</h1>
+            </Link>
+          </header>
 
-      <Switch>
-        <Route path="/details/:id"> {/*// Con : pasamos parámetros a las rutas */}
-          <Details />
-        </Route>
-        <Route path="/">
-          <SearchParams />
-        </Route></Switch>
-    </Router>
-    </div>
+          <Switch>
+            <Route path="/details/:id"> {/*// Con : pasamos parámetros a las rutas */}
+              <Details />
+            </Route>
+            <Route path="/">
+              <SearchParams />
+            </Route></Switch>
+        </Router>
+      </div>
+    </ThemeContext.Provider>
   )
 }
 
