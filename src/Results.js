@@ -1,10 +1,13 @@
 import React from "react";
 import Pet from "./Pet";
+import { useContext } from "react";
+import ThemeContext from "./ThemeContext";
 
 const Results = ({ pets }) => {
+    const [theme, setTheme] = useContext(ThemeContext)
 
     return (
-        <div className="search">
+        <div className="search" style={{ backgroundColor: theme }}>
             {!pets.length ? (
                 <h2>No pets found</h2>
             ) : (

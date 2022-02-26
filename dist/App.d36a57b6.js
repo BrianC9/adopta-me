@@ -35109,6 +35109,10 @@ exports.default = void 0;
 
 var _react = require("react");
 
+// Otros usos para el contexto global en una app
+// CSS
+// Un usuario se ha loggeado y queremos que toda la aplicación se base en ese contexto,
+// Por ejemplo, mi perfil, comentarios, página de ajustes del perfil, etc
 const ThemeContext =
 /*#__PURE__*/
 (0, _react.createContext)(["green", function () {}]);
@@ -35492,21 +35496,31 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _Pet = _interopRequireDefault(require("./Pet"));
+
+var _ThemeContext = _interopRequireDefault(require("./ThemeContext"));
 
 var _jsxRuntime = require("react/jsx-runtime");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 const Results = ({
   pets
 }) => {
+  const [theme, setTheme] = (0, _react.useContext)(_ThemeContext.default);
   return (
     /*#__PURE__*/
     (0, _jsxRuntime.jsx)("div", {
       className: "search",
+      style: {
+        backgroundColor: theme
+      },
       children: !pets.length ?
       /*#__PURE__*/
       (0, _jsxRuntime.jsx)("h2", {
@@ -35539,7 +35553,7 @@ const Results = ({
 
 var _default = Results;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./Pet":"Pet.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"SearchParams.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Pet":"Pet.js","./ThemeContext":"ThemeContext.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"SearchParams.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35576,7 +35590,10 @@ const SearchParams = () => {
   const [theme, setTheme] = (0, _react.useContext)(_ThemeContext.default);
   (0, _react.useEffect)(() => {
     requestPets();
-  }, []); // useEffect (()=>{},[])Esto le está diciendo al useEffect, cuando debería volver a ejecutarse, si no lo ponemos estmaos diciendole que lo ejecute cada vez que se hace un render, algo como un bucle infinito
+  }, [animal]);
+  (0, _react.useEffect)(() => {
+    requestPets();
+  }, [breed]); // useEffect (()=>{},[])Esto le está diciendo al useEffect, cuando debería volver a ejecutarse, si no lo ponemos estmaos diciendole que lo ejecute cada vez que se hace un render, algo como un bucle infinito
   // [animal] -> Le estamos diciendo que lo ejecute sólo cuando el estado de animal cambie
   // Ejemplo de un useEffect que implementa un garbage collector -> Más seguridad en caso de que [animal] se elimine del DOM 
   // useEffect(() => {
@@ -35604,20 +35621,10 @@ const SearchParams = () => {
       children: [
       /*#__PURE__*/
       (0, _jsxRuntime.jsxs)("form", {
+        style: {
+          backgroundColor: theme
+        },
         children: [
-        /*#__PURE__*/
-        (0, _jsxRuntime.jsxs)("label", {
-          htmlFor: "location",
-          children: ["Localizaci\xF3n",
-          /*#__PURE__*/
-          (0, _jsxRuntime.jsx)("input", {
-            id: "location" // onChange={actualizaLocaiton} //Esta función es equivalente a la arrow function que le pasamos
-            ,
-            onChange: event => setLocation(event.target.value),
-            value: location,
-            placeholder: "Localizaci\xF3n"
-          })]
-        }),
         /*#__PURE__*/
         (0, _jsxRuntime.jsxs)("label", {
           htmlFor: "animal",
@@ -35670,18 +35677,18 @@ const SearchParams = () => {
             children: [
             /*#__PURE__*/
             (0, _jsxRuntime.jsx)("option", {
-              value: "darkblue",
-              children: "Dark Blue"
+              value: "lightblue",
+              children: "Light Blue"
             }),
             /*#__PURE__*/
             (0, _jsxRuntime.jsx)("option", {
-              value: "peru",
-              children: "Peru"
+              value: "LightSlateGray",
+              children: "LightSlateGray"
             }),
             /*#__PURE__*/
             (0, _jsxRuntime.jsx)("option", {
-              value: "mediumorchid",
-              children: "Medium Orchid"
+              value: "lavender",
+              children: "Lavanda"
             })]
           })]
         }),

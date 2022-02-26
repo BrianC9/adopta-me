@@ -17,7 +17,10 @@ const SearchParams = () => {
 
     useEffect(() => {
         requestPets();
-    }, []); // useEffect (()=>{},[])Esto le está diciendo al useEffect, cuando debería volver a ejecutarse, si no lo ponemos estmaos diciendole que lo ejecute cada vez que se hace un render, algo como un bucle infinito
+    }, [animal]);
+    useEffect(() => {
+        requestPets();
+    }, [breed]);// useEffect (()=>{},[])Esto le está diciendo al useEffect, cuando debería volver a ejecutarse, si no lo ponemos estmaos diciendole que lo ejecute cada vez que se hace un render, algo como un bucle infinito
     // [animal] -> Le estamos diciendo que lo ejecute sólo cuando el estado de animal cambie
     // Ejemplo de un useEffect que implementa un garbage collector -> Más seguridad en caso de que [animal] se elimine del DOM 
     // useEffect(() => {
@@ -44,16 +47,16 @@ const SearchParams = () => {
 
 
     return (
-        <div className="search-params">
-            <form>
-                <label htmlFor="location">
+        <div className="search-params" >
+            <form style={{ backgroundColor: theme }}>
+                {/* <label htmlFor="location">
                     Localización
                     <input id="location"
                         // onChange={actualizaLocaiton} //Esta función es equivalente a la arrow function que le pasamos
                         onChange={(event) => setLocation(event.target.value)}
                         value={location}
                         placeholder="Localización" />
-                </label>
+                </label> */}
                 <label htmlFor="animal">
                     Animal
                     <select
@@ -95,9 +98,9 @@ const SearchParams = () => {
                         value={theme}
                         onChange={e => setTheme(e.target.value)}
                         onBlur={e => setTheme(e.target.value)}>
-                        <option value="darkblue">Dark Blue</option>
-                        <option value="peru">Peru</option>
-                        <option value="mediumorchid">Medium Orchid</option>
+                        <option value="lightblue">Light Blue</option>
+                        <option value="LightSlateGray">LightSlateGray</option>
+                        <option value="lavender">Lavanda</option>
                     </select>
                 </label>
                 <button style={{ backgroundColor: theme }}>Submit</button>
