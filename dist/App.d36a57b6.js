@@ -35114,7 +35114,62 @@ const ThemeContext =
 (0, _react.createContext)(["green", function () {}]);
 var _default = ThemeContext;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"Details.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js"}],"Modal.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = require("react");
+
+var _reactDom = require("react-dom");
+
+var _jsxRuntime = require("react/jsx-runtime");
+
+const modalRoot = document.querySelector("#modal");
+/*
+Explicación del renderizado del Modal en el DOM:
+Tenemos dos divs en el DOM, en nuestro div·root, vive nuestra aplicación principal,
+sin embargo, nuestro modal se va a renderizar en el div·modal y estará fuera del root, 
+simplemente estamos usandolo en nuestra aplicación mediante funciones.
+
+*/
+// Aparte de los modales, otro uso que le podemos dar a los portales, pueden ser las barras de navegación basadas en el contexto de un componente principal
+// Por ejemplo, estas leyendo un artículo de JS y queremos mostrar artóculos relacionados 
+
+const Modal = ({
+  children
+}) => {
+  const elRef = (0, _react.useRef)(null);
+
+  if (!elRef.current) {
+    elRef.current = document.createElement("div");
+  }
+
+  (0, _react.useEffect)(() => {
+    modalRoot.appendChild(elRef.current);
+    return () => modalRoot.removeChild(elRef.current); // Esto lo hacemos para eliminar el div que se renderiza y no tener memory leaks, es decir:
+    // Cuando abrimos un modal, se hace un append al DOM, si no lo limpiamos, estaremos creando tantos divs como veces abramos ese modal
+  }, []);
+  console.log(elRef.current); // elRef.current -> Hace referencia al div en el cual se va a renderizar el contenido
+
+  return (
+    /*#__PURE__*/
+    (0, _reactDom.createPortal)(
+    /*#__PURE__*/
+    (0, _jsxRuntime.jsx)("div", {
+      children: children
+    }), elRef.current)
+  ); //Lo que hace este método es, todos los hijos de este div, quiero que se renderizen en el div con id modal al que estoy haciendo referencia
+  // Por qué no hacer un ReactDOM? 
+  // Porque lo que estamos haciendo es renderizar fuera del DOM, y podría haber una sobrecarga
+};
+
+var _default = Modal;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"Details.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35132,6 +35187,8 @@ var _ErrorBoundary = _interopRequireDefault(require("./ErrorBoundary"));
 
 var _ThemeContext = _interopRequireDefault(require("./ThemeContext"));
 
+var _Modal = _interopRequireDefault(require("./Modal"));
+
 var _jsxRuntime = require("react/jsx-runtime");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -35147,7 +35204,16 @@ class Details extends _react.Component {
     super(...args);
 
     _defineProperty(this, "state", {
-      loading: true
+      loading: true,
+      showModal: false
+    });
+
+    _defineProperty(this, "toggleModal", () => this.setState({
+      showModal: !this.state.showModal
+    }));
+
+    _defineProperty(this, "adopt", () => {
+      window.location = "http://bit.ly/pet-adopt";
     });
   }
 
@@ -35167,6 +35233,8 @@ class Details extends _react.Component {
     // })
   }
 
+  //Agregamos un nuevo botón para el modal
+  // Aquí es donde tendríamos la lógica de la API -> Avisamos a la protectora de que alguien ha adoptado
   render() {
     const {
       animal,
@@ -35175,7 +35243,8 @@ class Details extends _react.Component {
       state,
       description,
       name,
-      images
+      images,
+      showModal
     } = this.state;
 
     if (this.state.loading) {
@@ -35213,6 +35282,7 @@ class Details extends _react.Component {
             children: ([theme]) =>
             /*#__PURE__*/
             (0, _jsxRuntime.jsxs)("button", {
+              onClick: this.toggleModal,
               style: {
                 background: theme
               },
@@ -35222,7 +35292,49 @@ class Details extends _react.Component {
           /*#__PURE__*/
           (0, _jsxRuntime.jsx)("p", {
             children: description
-          })]
+          }), showModal ?
+          /*#__PURE__*/
+          (0, _jsxRuntime.jsx)(_Modal.default, {
+            children:
+            /*#__PURE__*/
+            (0, _jsxRuntime.jsxs)("div", {
+              children: [
+              /*#__PURE__*/
+              (0, _jsxRuntime.jsxs)("h2", {
+                children: ["Would you like to adopt ", name]
+              }),
+              /*#__PURE__*/
+              (0, _jsxRuntime.jsx)("div", {
+                className: "buttons",
+                children:
+                /*#__PURE__*/
+                (0, _jsxRuntime.jsx)(_ThemeContext.default.Consumer, {
+                  children: ([theme]) =>
+                  /*#__PURE__*/
+                  (0, _jsxRuntime.jsxs)("div", {
+                    children: [
+                    /*#__PURE__*/
+                    (0, _jsxRuntime.jsx)("button", {
+                      style: {
+                        background: theme
+                      },
+                      onClick: this.adopt,
+                      children: "Yes"
+                    }),
+                    /*#__PURE__*/
+                    (0, _jsxRuntime.jsx)("button", {
+                      style: {
+                        background: theme
+                      },
+                      onClick: this.toggleModal,
+                      children: "No"
+                    })]
+                  })
+                })
+              })]
+            })
+          }) : null // Esto lo que hará es no renderizar nada
+          ]
         })
       })
     );
@@ -35249,7 +35361,7 @@ function DetailsWithErrorBoundary() {
 }
 
 ;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./Carousel":"Carousel.js","./ErrorBoundary":"ErrorBoundary.js","./ThemeContext":"ThemeContext.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"useBreedList.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./Carousel":"Carousel.js","./ErrorBoundary":"ErrorBoundary.js","./ThemeContext":"ThemeContext.js","./Modal":"Modal.js","react/jsx-runtime":"../node_modules/react/jsx-runtime.js"}],"useBreedList.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35717,7 +35829,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60670" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52681" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
